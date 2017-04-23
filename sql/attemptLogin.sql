@@ -1,5 +1,5 @@
 SELECT *
-FROM Customers
+FROM users
 WHERE
 	username = :username AND
 	password = :password

@@ -10,11 +10,11 @@ $database = new PDO('mysql:host=csweb.hh.nku.edu;dbname=db_spring17_gergela1', $
 
 $current_url = basename($_SERVER['REQUEST_URI']);
 
-function my_autoloader($class){
+function my_autoloader2($class){
     include 'class.' . $class . '.php';
 }
 
-spl_autoload_register('my_autoloader');
+spl_autoload_register('my_autoloader2');
 
 session_start();
 
@@ -24,5 +24,5 @@ if (!isset($_SESSION["userID"]) && $current_url != 'login.php') {
 }
 
 elseif (isset($_SESSION["userID"])) {
-    $customer = new Customer($_SESSION["userID"],$database);
+    $User = new User($_SESSION["userID"],$database);
 }
