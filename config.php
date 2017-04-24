@@ -1,4 +1,5 @@
 <?php
+include('functions.php');
 
 // Connecting to the MySQL database
 $user = 'gergela1';
@@ -24,5 +25,5 @@ if (!isset($_SESSION["userID"]) && $current_url != 'login.php') {
 }
 
 elseif (isset($_SESSION["userID"])) {
-    $User = new User($_SESSION["userID"],$database);
+    $user = new User($_SESSION["userID"],$database);
 }

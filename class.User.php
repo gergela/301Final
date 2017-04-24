@@ -10,11 +10,12 @@ class User{
     private $name;
     private $database;
     private $userID;
+    private $title;
 
     public function User($userID, $database){
         $sql = file_get_contents('sql/getUser.sql');
         $params = array(
-            'customerid' => $userID
+            'userid' => $userID
         );
         $statement = $database->prepare($sql);
         $statement->execute($params);
@@ -23,10 +24,15 @@ class User{
 
         $this->userID = $userID;
         $this->name = $user['name'];
+        $this->title = $user['job_title'];
         $this->database = $database;
     }
 
     public function getName(){
         return $this->name;
+    }
+
+    public function getTitle(){
+        return $this->title;
     }
 }

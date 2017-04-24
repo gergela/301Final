@@ -49,42 +49,42 @@ $action = $_GET['action'];
 
 $sectionCount = 1;
 
-if((isset($_GET['portfolio']))&& (action == 'edit')) {
-    $portfolio = $_GET['portfolio'];
+if((isset($_GET['portfolioID']))&& (action == 'edit')) {
+    $portfolio = $_GET['portfolioID'];
 }
 
 // If form submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $isbn = $_POST['isbn'];
-    $title = $_POST['book-title'];
-    $book_categories = $_POST['book-category'];
-    $author = $_POST['book-author'];
-    $price = $_POST['book-price'];
+    $portfolioName = $_POST['portfolioName'];
+
+    $isActive1 = $_POST['isActive1'];
+    $sectionName1 = $_POST['sectionName1'];
+    $featuredImageURL1 = $_POST['featuredImageURL1'];
+    $contentImageURL1 = $_POST['contentImageURL1'];
+    $sectionContent1 = $_POST['sectionContent1'];
+
+    $isActive2 = $_POST['isActive2'];
+    $sectionName2 = $_POST['sectionName2'];
+    $featuredImageURL2 = $_POST['featuredImageURL2'];
+    $contentImageURL2 = $_POST['contentImageURL2'];
+    $sectionContent2 = $_POST['sectionContent2'];
 
     if($action == 'add') {
-        // Insert book
-        $sql = file_get_contents('sql/insertBook.sql');
+        $portfolio = new Portfolio();
+        $portfolio->updateUserInfo($database);
+        $portfolio->addSection($sectionName1,$featuredImageURL1,$sectionContent1,$contentImageURL1,1, $isActive1);
+        $portfolio->addSection($sectionName2,$featuredImageURL2,$sectionContent2,$contentImageURL2,2, $isActive2);
+        $portfolio->setPortfolioName($portfolioName);
+        // Insert portfolio
+        $sql = file_get_contents('sql/insertPortfolio.sql');
         $params = array(
-            'isbn' => $isbn,
-            'title' => $title,
-            'author' => $author,
-            'price' => $price
+            'portfolio' => serialize($portfolio),
+            'userID' => $_SESSION['userID'],
+            'portfolioName' => $portfolioName
         );
 
         $statement = $database->prepare($sql);
         $statement->execute($params);
-
-        // Set categories for book
-        $sql = file_get_contents('sql/insertBookCategory.sql');
-        $statement = $database->prepare($sql);
-
-        foreach($book_categories as $category) {
-            $params = array(
-                'isbn' => $isbn,
-                'categoryid' => $category
-            );
-            $statement->execute($params);
-        }
     }
 
     elseif ($action == 'edit') {
@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="utf-8">
 
-    <title>Manage Book</title>
+    <title>Manage Portfolio</title>
     <meta name="description" content="The HTML5 Herald">
     <meta name="author" content="SitePoint">
 
@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-amber.min.css" />
     <link rel="stylesheet" href="css/custom.css"/>
 
-
+w
 
     <!--[if lt IE 9]>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
@@ -166,16 +166,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="mdl-card__supporting-text enable-overflow">
 
                 <form action="" method="POST">
+                    <div class="form-element mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="display: block;">
+                        <input type="text" name="portfolioName" class="mdl-textfield__input" value="" />
+                        <label class="mdl-textfield__label">Portfolio name:</label>
+                    </div>
+
                     <h4>Section 1</h4>
 
                     <div class="form-element">
                         <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="is-active1">
-                            <input type="checkbox" id="is-active1" name="isactive1" value="true" class="mdl-checkbox__input">
+                            <input type="checkbox" id="is-active1" name="isActive1" value="true" class="mdl-checkbox__input">
                             <span class="mdl-checkbox__label">Use section 1?</span>
                         </label>
                     </div>
 
-                    <div class="form-element mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div class="form-element mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="display: block;">
                         <input type="text" name="sectionName1" class="mdl-textfield__input" value="" />
                         <label class="mdl-textfield__label">Section Name:</label>
                     </div>
@@ -191,7 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield fullwidth">
-                        <textarea class="mdl-textfield__input" rows="10" name="portfolio1"></textarea>
+                        <textarea class="mdl-textfield__input" rows="10" name="sectionContent1"></textarea>
                         <label class="mdl-textfield__label">Content:</label>
                     </div>
 
@@ -199,11 +204,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                     <div class="form-element">
                         <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="is-active2">
-                            <input type="checkbox" id="is-active2" name="isactive2" value="true" class="mdl-checkbox__input">
+                            <input type="checkbox" id="is-active2" name="isActive2" value="true" class="mdl-checkbox__input">
                             <span class="mdl-checkbox__label">Use section 2?</span>
                         </label>
                     </div>
-                    <div class="form-element mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <div class="form-element mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="display: block;">
                         <input type="text" name="sectionName2" class="mdl-textfield__input" value="" />
                         <label class="mdl-textfield__label">Section Name:</label>
                     </div>
@@ -219,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
 
                     <div class="mdl-textfield mdl-js-textfield fullwidth">
-                        <textarea class="mdl-textfield__input" rows="10" name="portfolio2"></textarea>
+                        <textarea class="mdl-textfield__input" rows="10" name="sectionContent2"></textarea>
                         <label class="mdl-textfield__label">Section Content:</label>
                     </div>
                     <div class="mdl-card__actions mdl-card--border">

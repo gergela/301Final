@@ -391,3 +391,6 @@ body{
 .time-field{
     width:120px;
 }
+.compressed-lines p{
+    line-height: 14px;
+}

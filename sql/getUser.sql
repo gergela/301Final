@@ -1,3 +1,3 @@
 SELECT *
-FROM Customers
-WHERE customerid = :customerid
+FROM users
+WHERE user_id = :userid

@@ -20,19 +20,21 @@ class Portfolio{
             );
             $statement = $database->prepare($sql);
             $statement->execute($params);
-            $customers = $statement->fetchAll(PDO::FETCH_ASSOC);
-            $customer = $customers[0];
+            $users = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $user = $users[0];
 
-            $this->name = $customer['name'];
-            $this->title = $customer['title'];
+            $this->name = $user['name'];
+            $this->title = $user['job_title'];
         }
     }
 
-    public function addSection($title,$featuredImage,$text,$image){
-        $this->sections[count($this->sections)]["sectionTitle"] = $title;
-        $this->sections[count($this->sections)]["featuredImage"] = $featuredImage;
-        $this->sections[count($this->sections)]["text"] = $text;
-        $this->sections[count($this->sections)]["image"] = $image;
+    public function addSection($title,$featuredImage,$text,$image,$id, $isActive){
+        $this->sections[$id]["sectionTitle"] = $title;
+        $this->sections[$id]["featuredImage"] = $featuredImage;
+        $this->sections[$id]["text"] = $text;
+        $this->sections[$id]["image"] = $image;
+        $this->sections[$id]["id"] = $id;
+        $this->sections[$id]["isActive"] = $isActive;
 
     }
 
