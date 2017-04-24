@@ -19,8 +19,7 @@ spl_autoload_register('my_autoloader2');
 
 session_start();
 
-
-if (!isset($_SESSION["userID"]) && $current_url != 'login.php') {
+if (!isset($_SESSION["userID"]) && $current_url != 'login.php' && $current_url != 'userform.php?action=add') {
     header("Location: login.php");
 }
 

@@ -74,7 +74,7 @@ $portfolio->updateUserInfo($database);
                     <a href="<?php echo $portfolio->getSections()[1]['image'] ?>" target="_blank"><image src="<?php echo $portfolio->getSections()[1]['image'] ?>" class="img-responsive image-medium auto-margin"></a>
                 </div>
                 <div class="col-md-4 section-aside">
-                    <p><?php echo $portfolio->getSections()[2]['text'] ?></p>
+                    <p><?php echo $portfolio->getSections()[1]['text'] ?></p>
                 </div>
             </div>
         <?php endif; ?>

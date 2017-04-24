@@ -41,3 +41,4 @@ function searchUserPortfolios($term, $database, $userID){
     $portfolios = $statement->fetchAll(PDO::FETCH_ASSOC);
     return $portfolios;
 }
+

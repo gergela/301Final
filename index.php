@@ -12,6 +12,17 @@ include('config.php');
 $term = get('search-term');
 $portfolios = searchUserPortfolios($term, $database, $_SESSION["userID"]);
 
+$sql = file_get_contents('sql/getBio.sql');
+$params = array(
+    'userid' => $_SESSION['userID']
+);
+$statement = $database->prepare($sql);
+$statement->execute($params);
+$bios = $statement->fetchAll(PDO::FETCH_ASSOC);
+if(isset($bios[0])){
+    $bio = $bios[0];
+}
+
 ?>
 
 <!doctype html>
@@ -38,7 +49,7 @@ $portfolios = searchUserPortfolios($term, $database, $_SESSION["userID"]);
 <section class="section--center mdl-grid mdl-grid--no-spacing mdl-shadow--2dp question-section mdl-cell--8-col mdl-cell--6-col-tablet">
     <div class="mdl-cell mdl-cell--12-col mdl-shadow--4dp mdl-card">
         <div class="mdl-card__title">
-            <h2 class="mdl-card__title-text">Profile </h2>
+            <h2 class="mdl-card__title-text">Profile  <a href="userform.php?action=edit"><i class="material-icons">mode_edit</i></a></h2>
             <form method="GET">
                 <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" style="position: absolute;right: 10px;top: 40px;">
                     <label class="mdl-button mdl-js-button mdl-button--icon" for="sample6">
@@ -53,10 +64,17 @@ $portfolios = searchUserPortfolios($term, $database, $_SESSION["userID"]);
         </div>
         <div class="mdl-card__supporting-text enable-overflow">
             <div class="page compressed-lines">
+                <?php if(isset($bio['bio'])): ?>
+                    <h4>Bio</h4>
+                    <hr>
+                    <p><?php echo $bio['bio'] ?></p>
+                    <h4>Portfolios</h4>
+                    <hr>
+                <?php endif; ?>
                 <?php foreach($portfolios as $portfolio) : ?>
                     <p>
                         <a href="viewportfolio.php?portfolioID=<?php echo $portfolio['ID'] ?>" class="basic-link" target="_blank"><?php echo $portfolio['portfolio_name']; ?> </a>
-                        <a href="form.php?action=add&portfolioID=<?php $portfolio['ID'] ?>"><i class="material-icons" style="font-size: 14px;">mode_edit</i></a>
+                        <a href="form.php?action=edit&portfolioID=<?php echo $portfolio['ID'] ?>"><i class="material-icons" style="font-size: 14px;">mode_edit</i></a>
                         <br />
                         <small>Created by: <?php echo $user->getName(); ?><br /></small>
                     </p>
@@ -65,6 +83,7 @@ $portfolios = searchUserPortfolios($term, $database, $_SESSION["userID"]);
         </div>
         <div class="mdl-card__actions mdl-card--border">
             <a href="form.php?action=add"<button  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"/>Create Portfolio</button></a>
+            <a href="viewall.php"<button  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"/>View All Portfolios</button></a>
             <a href="logout.php"<button  class="mdl-button mdl-js-button mdl-js-ripple-effect"/>Logout</button></a>
         </div>
     </div>
